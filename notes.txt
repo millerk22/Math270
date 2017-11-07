@@ -1,0 +1,67 @@
+Notes about ssh
+
+
+public/private key authentication---
+
+really is more private key, and a public LOCK.. the lock is on a public object, but want it locked! use your private key to unlock that public object
+
+
+More on public/private key: 
+	ssh-keygen
+
+Local				Remote
+private key (eg id-rsa)		public key = "public lock" (eg id_rsa.pub)
+
+appended to ~username/ssh/authorized/keys
+
+pass phrase? Most useful with a key agent
+
+-----------------------------------------
+
+Optimization Alternatives
+(Improving efficiency)
+
+1- Buy a faster machine... faster clock --> faster CPU bus memory. 
+	- this is the old way.. sort of reached the limit, chips get too hot going any faster.
+
+2 - Turn on compiler optimization. g++ -O (that's capital O, not 0)
+	Visual Studio build "release" , not debug
+	-O1, -O2, ... --> more aggressive optimization
+
+
+3 - Algorithmic Improvements
+	- choosing dt based on eigenvalues of the discrete operators instead of the cts ones? (We derived them with the cts, maybe it could be sped up with the discrete operator's evals)
+	- different sweep execution. (possibly, don't do relaxations for dt's where there is no substantial error reduction)
+		- stop when residual is small at any level
+		- change the stopping condition/tolerance
+		(||residual||, ||uk - ukp1||, ...) or smaller tolerance (less digits of accuracy needed then can have smaller tolerance)
+	- use a hierarchical grid
+		- dt = 4(2^jh0)/(alpha pi^2)   ---- use grid of size hj = 2^jh0  (Multigrid Method)
+
+4 - Implementation Improvements
+	- how to make code run faster on the machine
+	1 - Use Multiprocessors
+		- use multicore(multicore CPUs)
+		- cluster(collection of machines via a fast network) --- MPI
+		- GPU(computational accelerators) -- many, many many cores
+		(With a new machine can get multicore and GPU)
+		Modest to SIGNIFICANT coding changes....
+	
+	2 - Low Level Implementation Details
+		- while the compiler optimizer is pretty good, there's different things it can't do:
+		- array access considerations
+			- (memory layout, loop structure)
+		- memory allocation and deallocation
+		- temporary variables
+		- data locality
+
+
+high performance libraries  -- BLAS, take advantage of the hardward, so you can call routines that do the machine specific (chip specific) structure
+
+
+
+
+
+
+
+

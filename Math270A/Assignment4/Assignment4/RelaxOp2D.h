@@ -127,8 +127,9 @@ public:
         
         GridFun2D ustar; // make copy of uIn, use as intermediate step
         ustar = uIn; // copy initializer to get same sizes and place to start
-        GNUplotUtility::output(ustar, "firstuSTAR11.dat");
-        // Forward step
+        // GNUplotUtility::output(ustar, "firstuSTAR11.dat");
+       
+	// Forward step
         double Xval = 0.5*alphaX*dt/(uIn.hx*uIn.hx); // Note the constant in front of D_D+ X is
         double Yval = alphaY*dt/(uIn.hy*uIn.hy); // different than D_D+ Y....
         for(long i=1; i < Mx - 1; i++){
@@ -138,10 +139,10 @@ public:
             }
         }
         
-        GNUplotUtility::output(ustar, "firstuSTAR.dat");
+        //GNUplotUtility::output(ustar, "firstuSTAR.dat");
         ustar += F;
         
-        GNUplotUtility::output(ustar,"uStar.dat");
+        //GNUplotUtility::output(ustar,"uStar.dat");
         
         
         GridFun2D ustar2;
@@ -167,7 +168,7 @@ public:
                 ustar2.values(i,j) = ustar2_j[i];
             }
         }
-        GNUplotUtility::output(ustar2,"uStar2.dat");
+        //GNUplotUtility::output(ustar2,"uStar2.dat");
         
         
         for(long i = 1; i < Mx-1; i++){
@@ -176,7 +177,7 @@ public:
             }
         }
         
-        GNUplotUtility::output(ustar2, "uStar2final.dat");
+        //GNUplotUtility::output(ustar2, "uStar2final.dat");
         // Solve (I - 0.5*dt*alphaY*D_D+ Y uOut = ustar2
         vector<double> ustar2_i;
         vector<double> uOut_i;
@@ -194,7 +195,7 @@ public:
             }
         }
         
-        GNUplotUtility::output(uOut, "uOUT.dat");
+        //GNUplotUtility::output(uOut, "uOUT.dat");
         
         return;
     };

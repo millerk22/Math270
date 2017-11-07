@@ -3,16 +3,16 @@
 using namespace std;
 
 //
-// Math 270A : Assignment 4
+// Math 270A : Assignment 5
 //
-// Test program for fixed step relaxation to a solution of
+// Test program for variable step relaxation to a solution of
 //
 // alphaX * d^2 U/dx^2  alphaY * d^2 U/dy^2 = f(x,y)  with Dirichlet boundary conditions
 //
 // for (x,y) in [xMin, xMax]X[yMin,yMax] using the 2D version of Douglas ADI
 //
 //
-// Date: Oct. 24, 2017
+// Date: Nov 3., 2017
 //
 
 #include "GridFun2D.h"    // 2D grid function class
@@ -92,6 +92,7 @@ void evaluatePoissonResidual(double alphaX, double alphaY, GridFun2D& u, GridFun
 
 int main()
 {
+    
     // Set up test problem
     
     double alphaX      =  2.0;  // Laplace operator-x prefactor
@@ -99,12 +100,14 @@ int main()
     double waveNumberX =  1.0;  // test problem x-coordinate wave number
     double waveNumberY =  1.0;  // test problem y-coordinate wave number
     
-    double dt     =     .1;  // Relaxation timestep
-    
-    long   xPanel     =   40;  // X panel count
-    long   yPanel     =   40;  // Y panel count
+    // get the user input to specify the panel count
+    long INPUT;
+    cout << "Please input the panel count " << endl;
+    cin >> INPUT;
+    long   xPanel     =   INPUT;  // X panel count
+    long   yPanel     =   INPUT;  // Y panel count
     double tol    =  1.0e-6;  // Stopping tolerance
-    cout << tol << endl << endl; 
+    
     double xMin   =     0.0;
     double xMax   =     1.0;
     double hx     = (xMax-xMin)/(double)xPanel;
@@ -120,11 +123,13 @@ int main()
     // Echo input parameters
     
     cout << "XXXX   Douglas ADI Program Start      XXXX " << endl;
+    cout << "XXXX   Variable Time Stepping         XXXX " << endl;
     cout << "alpha_x : " << alphaX << endl;
     cout << "alpha_y : " << alphaY << endl;
     cout << "X Panel Count : " << xPanel << endl;
     cout << "Y Panel Count : " << yPanel << endl;
-    cout << "Timestep      : " << dt << endl;
+    cout << "Stopping Tolerance : " << tol << endl;
+    //cout << "Timestep      : " << dt << endl;
     
     //
     // Instantiate the test problem solution
@@ -142,6 +147,7 @@ int main()
     GridFun2D f(xPanel,xMin,xMax,yPanel,yMin,yMax);
     GridFun2D uk(xPanel,xMin,xMax,yPanel,yMin,yMax);
     GridFun2D ukp1(xPanel,xMin,xMax,yPanel,yMin,yMax);
+    GridFun2D uTmp(xPanel,xMin,xMax,yPanel,yMin,yMax);
     
     GridFun2D uExact(xPanel,xMin,xMax,yPanel,yMin,yMax);
     GridFun2D uSolnErr(xPanel,xMin,xMax,yPanel,yMin,yMax);
@@ -163,6 +169,8 @@ int main()
             uExact.values(i,j) = testSoln(x,y);
         }
     }
+    
+    
     //
     // Set initial iterate with interior values equal to zero
     // and perimeter (boundary) values set the exact solution.
@@ -216,61 +224,76 @@ int main()
     GNUplotUtility::output(uExact,"uExact.dat");
     outputFileList.push_back("uExact.dat : Exact solution");
     
-    //
-    // Instantiate and initialize the relaxation operator
-    //
-    
-    RelaxOp2D relaxOp;
-    relaxOp.initialize(dt,alphaX,alphaY,f);
-    
-    
     
     //
-    // Relaxation loop
+    /// Find all the dtj's so we don't have to calculate each time
     //
     
-    double diffNorm = 2*tol;
-    long   iterMax  = 10000;
+    long M = xPanel; // find M = max(xPanel, yPanel)
+    if (yPanel > xPanel){
+        M = yPanel;
+    }
+    int levels = int(log2(M)+ 1); // levels is the number of different dtj's we will do in a sweep
+    vector<float> dTJ;
+    vector<RelaxOp2D> RO2D_levels;
+    dTJ.resize(levels);
+    RO2D_levels.resize(levels);
+    for (int i=0; i < levels; i++){
+        dTJ[i] = 4.0*hx*hx*pow(2.0,i)/(pi*pi*alphaX); // note hx = hy = h0 and alphaX = alphaY = alpha
+        RO2D_levels[i].initialize(dTJ[i], alphaX, alphaY, f);
+    }
+    
+    
+    //
+    // Relaxation loop, with Variable Timestepping this time
+    //
+    
+    long   iterMax  = 1000;
     long   iter     = 0;
-    double uNorm;
+    long iters_levels = 0;
+    double residualNormInf = 2*tol;
     
-    while((diffNorm > tol)&&(iter < iterMax))
+    while((residualNormInf > tol)&&(iter < iterMax))
     {
-        relaxOp.apply(uk,ukp1);
+        // forward sweep
+        uTmp = uk;
         
+        for(int j=0; j < levels; j++){
+            RO2D_levels[j].apply(uTmp, ukp1);
+            uTmp = ukp1;
+        }
         
-        // Check scaled relative difference between iterates
+        // backward sweep
+        for(int j=levels-1; j>= 0; j--){
+            RO2D_levels[j].apply(uTmp, ukp1);
+            uTmp = ukp1;
+        }
         
-        uNorm     = ukp1.normInf();
+        iters_levels += 2*levels;
         
-        uk       -= ukp1;
-        diffNorm  = uk.normInf();
-        diffNorm /= (dt*uNorm);
+        // Evaluate the residual and the relative norm of the residual
+        evaluatePoissonResidual(alphaX,  alphaY, ukp1, f, residual);
+        
+        residualNormInf = residual.normInf();
+        residualNormInf /= f.normInf();  // do we need this?
+        
         
         // Update iterate
         
         uk  = ukp1;
         iter++;
         
-        if(iter%100 == 0) cout << "Iteration : " << iter << endl;
+        if(iter%10 == 0) cout << "Iteration : " << iter << endl;
     }
     
     
-    // Evaluate the residual and the realtive norm of the residual
     
-    double residualNormInf;
-    
-    evaluatePoissonResidual(alphaX,  alphaY, uk, f, residual);
-    
-    residualNormInf = residual.normInf();
-    residualNormInf /= f.normInf();
-    
+    // output the final residual's values to a dat file
     GNUplotUtility::output(residual,"residual.dat");
     outputFileList.push_back("Residual   : residual.dat");
     
     
     // Evaluate the error with respect to the continuous solution
-    
     
     uSolnErr =         uk;
     uSolnErr -=    uExact;
@@ -288,9 +311,10 @@ int main()
     // Print out the results using standard C I/0
     //
     
-    printf("\nXXXX   Fixed Timstep Relaxation Output XXXX \n\n");
-    printf("Number of iterations               : %ld \n",iter);
-    printf("Scaled Difference between iterates : %10.5e \n",diffNorm);
+    printf("\nXXXX   Variable Timestep Relaxation Output XXXX \n\n");
+    printf("Number of levels per sweep         : %1d \n", levels);
+    printf("Number of sweeps               : %ld \n",iter);
+    printf("Total Number of iterations      : %1d \n", iters_levels);
     printf("Relative residual Size (InfNorm)   : %10.5e \n",residualNormInf);
     printf("Absolute solution error (InfNorm)  : %10.5e \n",absSolnError);
     printf("Relative solution error (InfNorm)  : %10.5e \n",relSolnError);
@@ -307,3 +331,4 @@ int main()
     
     return 0;
 }
+
