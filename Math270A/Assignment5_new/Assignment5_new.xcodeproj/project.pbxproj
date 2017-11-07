@@ -7,7 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A48D6171FB252ED00E0AFED /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A48D6161FB252ED00E0AFED /* main.cpp */; };
+		0A48D6241FB2531B00E0AFED /* RelaxOp2D.h in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A48D6201FB2531A00E0AFED /* RelaxOp2D.h */; };
+		0A48D6251FB2531B00E0AFED /* DoubleArray2D.h in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A48D6211FB2531A00E0AFED /* DoubleArray2D.h */; };
+		0A48D6261FB2531B00E0AFED /* GridFun2D.h in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A48D6221FB2531A00E0AFED /* GridFun2D.h */; };
+		0A48D6271FB2531B00E0AFED /* GNUplotUtility.h in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A48D6231FB2531A00E0AFED /* GNUplotUtility.h */; };
+		0A48D6291FB2532D00E0AFED /* TriSolver.h in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A48D6281FB2532D00E0AFED /* TriSolver.h */; };
+		0A48D62B1FB2564900E0AFED /* Assign5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A48D62A1FB2564900E0AFED /* Assign5.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +29,12 @@
 
 /* Begin PBXFileReference section */
 		0A48D6131FB252ED00E0AFED /* Assignment5_new */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Assignment5_new; sourceTree = BUILT_PRODUCTS_DIR; };
-		0A48D6161FB252ED00E0AFED /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		0A48D6201FB2531A00E0AFED /* RelaxOp2D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RelaxOp2D.h; path = ../Assignment4/Assignment4/RelaxOp2D.h; sourceTree = "<group>"; };
+		0A48D6211FB2531A00E0AFED /* DoubleArray2D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DoubleArray2D.h; path = ../Assignment4/Assignment4/DoubleArray2D.h; sourceTree = "<group>"; };
+		0A48D6221FB2531A00E0AFED /* GridFun2D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GridFun2D.h; path = ../Assignment4/Assignment4/GridFun2D.h; sourceTree = "<group>"; };
+		0A48D6231FB2531A00E0AFED /* GNUplotUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GNUplotUtility.h; path = ../Assignment4/Assignment4/GNUplotUtility.h; sourceTree = "<group>"; };
+		0A48D6281FB2532D00E0AFED /* TriSolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TriSolver.h; path = ../Assignment3/Assignment3/Assignment3/TriSolver.h; sourceTree = "<group>"; };
+		0A48D62A1FB2564900E0AFED /* Assign5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Assign5.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +42,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A48D6291FB2532D00E0AFED /* TriSolver.h in Frameworks */,
+				0A48D6241FB2531B00E0AFED /* RelaxOp2D.h in Frameworks */,
+				0A48D6251FB2531B00E0AFED /* DoubleArray2D.h in Frameworks */,
+				0A48D6261FB2531B00E0AFED /* GridFun2D.h in Frameworks */,
+				0A48D6271FB2531B00E0AFED /* GNUplotUtility.h in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +58,7 @@
 			children = (
 				0A48D6151FB252ED00E0AFED /* Assignment5_new */,
 				0A48D6141FB252ED00E0AFED /* Products */,
+				0A48D61F1FB2531A00E0AFED /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,9 +73,21 @@
 		0A48D6151FB252ED00E0AFED /* Assignment5_new */ = {
 			isa = PBXGroup;
 			children = (
-				0A48D6161FB252ED00E0AFED /* main.cpp */,
+				0A48D62A1FB2564900E0AFED /* Assign5.cpp */,
 			);
 			path = Assignment5_new;
+			sourceTree = "<group>";
+		};
+		0A48D61F1FB2531A00E0AFED /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0A48D6281FB2532D00E0AFED /* TriSolver.h */,
+				0A48D6211FB2531A00E0AFED /* DoubleArray2D.h */,
+				0A48D6231FB2531A00E0AFED /* GNUplotUtility.h */,
+				0A48D6221FB2531A00E0AFED /* GridFun2D.h */,
+				0A48D6201FB2531A00E0AFED /* RelaxOp2D.h */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,7 +147,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A48D6171FB252ED00E0AFED /* main.cpp in Sources */,
+				0A48D62B1FB2564900E0AFED /* Assign5.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
