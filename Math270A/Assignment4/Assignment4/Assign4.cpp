@@ -104,7 +104,7 @@ int main()
     long   xPanel     =   40;  // X panel count
     long   yPanel     =   40;  // Y panel count
     double tol    =  1.0e-6;  // Stopping tolerance
-    cout << tol << endl << endl; 
+    cout << "Stopping tolerance : " <<  tol << endl << endl; 
     double xMin   =     0.0;
     double xMax   =     1.0;
     double hx     = (xMax-xMin)/(double)xPanel;
