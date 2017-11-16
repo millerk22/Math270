@@ -174,6 +174,7 @@ for(k = 0; k < repetitions; k++)
     {
     for(i = 1; i < xPanel; i++)
     {
+# pragma omp parallel for default(shared) private(j) schedule(static)
     for(j = 1; j < yPanel; j++)
     {
         d2u_A.values(i,j) =
