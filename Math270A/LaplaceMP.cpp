@@ -172,7 +172,7 @@ for(k = 0; k < repetitions; k++)
 
     for(k = 0; k < repetitions; k++)
     {
-#pragma omp parallel for default(shared) private(i,j) schedule(static)
+        //#pragma omp parallel for default(shared) private(i,j) schedule(static)
     for(i = 1; i < xPanel; i++)
     {
     for(j = 1; j < yPanel; j++)
