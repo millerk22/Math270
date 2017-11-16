@@ -15,6 +15,7 @@
 
 using namespace std;
 
+cout << "Hello" << endl << endl;
 
 #ifdef _OPENMP
 cout << "Using openmp" << endl << endl;
