@@ -115,6 +115,7 @@ public:
     #else
     // define += operator for GridFun2D objects (WITH OPENMP)
     void operator+=(const GridFun2D& g){
+        long j;
         for (long i=0; i<values.getIndex1Size(); i++){
 #pragma omp parallel for default(shared) private(j) schedule(static)
             for(long j=0; j<values.getIndex2Size(); j++){
