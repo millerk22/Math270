@@ -12,8 +12,14 @@
 #include <cstdlib>
 #include "DoubleArray2D.h"
 
+
 using namespace std;
 
+
+#ifdef _OPENMP
+cout << "Using openmp" << endl << endl;
+#include<omp.h>
+#endif
 
 
 #ifndef _GridFun2D_
@@ -95,6 +101,9 @@ public:
         initialize(g);
     };
     
+
+
+    #ifndef _OPENMP
     // define += operator for GridFun2D objects
     void operator+=(const GridFun2D& g){
         for(long i=0; i < values.getIndex1Size(); i++){
@@ -103,6 +112,18 @@ public:
             }
         }
     };
+    
+    #else
+    // define += operator for GridFun2D objects (WITH OPENMP)
+    void operator+=(const GridFun2D& g){
+        for (long i=0; i<values.getIndex1Size(); i++){
+            #pragma omp parallel for default(shared) private(j,g) schedule(static)
+            for(long j=0; j<values.getIndex2Size(); j++){
+                values(i,j) += g.values(i,j);
+            }
+        }
+    };
+    #endif
     
     // define -= operator for GridFun2D objects
     void operator-=(const GridFun2D& g){
