@@ -15,10 +15,8 @@
 
 using namespace std;
 
-cout << "Hello" << endl << endl;
 
 #ifdef _OPENMP
-cout << "Using openmp" << endl << endl;
 #include<omp.h>
 #endif
 
