@@ -1,0 +1,178 @@
+Comment on Copy Constructor:
+	Make sure your copy constructors handle null instantiating correctly.
+	good practive, don't rely on default constructors/destructors because of the problem with making vector of objects you've created.
+			(vector of objects, calls null constructor on first one, then copy constructor on the rest, using the first one as the object to copy)
+	Want to know what your compiler does? Put print statements into the null and copy constructors, see what is called when you instantiate a vector of the objects
+
+
+Notes on Multi-threading
+
+processes and threads
+	process: A process is an activity (or program) that uses CPU resources
+	Modern Operating Systems (OS) can manage multiple processes
+		OS does time sharing (or time slicing)
+			process 1 for XXX seconds
+			process 2 for YYY seconds
+			...
+			process m for ZZZ seconds , repeat loop etc
+		What gets executed when depends on the priority of the process. To some extent, you as the user can specify some of this
+	to see processes running:
+	% ps -a (Linux)
+	Activity Monitor (OS X)
+
+	with multiple cores in the computer, the OS can split up the processes onto the different cores.
+		cores can execute processes simultaneously
+		"process level parallel execution"
+	POSSIBLY improved performance
+		Why not improved?
+			- shared resource (keyboard input, large data file in memory)
+			- still is a limitation of CPU core power ( since each core isn't as fast as the best single CPU's out there, due to thermal limitations of clock speed for the cores)
+		
+	physical cores and virtual cores (hyper threading)
+
+
+	threads: a unit of execution that can be scheduled by the operating system
+		process 1 thread 1, 2, 3, 4
+	OS 	process 2 thread 1, 2, 3, 4
+		process 3 ...
+
+	Each core sent a different thread from the process
+	Can get possible increase in performance by having simultaneous thread execution "thread level parallel execution"
+
+	problems -- need to make sure different threads aren't writing to the same spot in memory!! So still have to think about the what's going on
+
+ 
+How to access (manage) multiple threads?
+- low level. working with the actual threads (UGH... no)
+- OpenMP = a set of compiler directives that set up and manage a thread pool for execution
+	- telling the compiler that need to do stuff with the threads, with some rules/directions
+	
+	+ some "basic" thread routines
+
+Reference 
+	https://computing.llnl.gov/tutorials/openMP/
+	or search "openMP" in search engine
+
+What do you need to get started with openMP?
+	- #include <omp.h>
+	- compile with -fopenmp
+	- incorporate OpenMP compier directives and thread management calls in one's code
+	- maybe for Xcode have to enable OpenMP in the project's Properties
+	
+	(often very few code changes involved)
+
+
+Compiler directive: (in case the machine doesn't have OpenMP enabled)
+#ifndef _OPENMP
+regular code
+
+#else 
+openMP code
+
+#endif
+
+
+Want to know about the ok uses of this-> . Look in C++ book first?
+
+
+
+
+***********************************
+
+Using Open MP
+
+(1) Include omp.h 
+	- #include <omp.h>
+	- #ifdef _OPENMP    (this is defined when open MP is enabled
+	#include <omp.h>
+	#endif
+
+(2) compile with open mp enabled
+	Linux: -fopenmp    (works on joshua)
+	Mac: Need to check, not sure. but only need for our local development
+
+(3) use openmp functions and compiler directives (the ones you need for #6 they are demonstrate in sample programs you'll download)
+
+Useful OPEN MP functions
+
+omp_get_max_threads() {returns the maximum # of threads available}
+
+omp_set_num_threads(threadCount): requesting thread count # of threads to use
+
+omp_get_max_threads() : returns # specified if omp_set_num... function is used
+
+m = omp.get_thread_num(): returns the index of the current thread being used to execute the code "you are in"
+
+
+Compiler Directive 
+	#pragma omp for ....   (multithreads the following loop)           (#pragma is the compiler directive command)
+	for(i=0; i< iCount; i++){
+		[code}           telling the OS to multithread the for loop
+	}
+
+Example:
+	#pragma omp for default(shared) private(j,y) schedule(static)
+		only j and y are thread dependent in the loop, keeps other variables globally shared between threads
+
+g++ -fopenmp -I../ stuff/ TimingTest.cpp -oTimingTestMP.exe   (this works on joshua (ie Linux))
+
+
+
+After getting openmp to work on your local machine, then Assignment 6 is just messing around with where you place the statement #pragma in different locations?
+
+
+---------------------------
+Dot Products with OpenMP
+---------------------------
+
+problems, because threads might overwrite eachother because of the randomness of the timing
+
+Reduction Operation
+store values from different threads in an array, to do final operation at the end
+
+
+NOTE: with openmp, NOT DETERMINISTIC, so when debugging, make sure you can choose just 1 thread, and see if you're getting the wrong answer because of overwrites.
+
+
+
+
+
+Problems with OpenMP, parallel processing
+	- talking to memory along the bus is a bottleneck -- "communication is killing me with this algorithm" --> each thread is trying to access memory, and has to wait for others to finish so can use
+
+General Principle:
+	You try to have each thread (computational unit) do as much CPU work as possible and limit data transfer operations (communication)
+
+
+
+Accuracy vs Precision
+	accuracy --- soln error  (u_ex - u_comp)
+		controlled by discretization, how close you're actually getting to the real solution
+	precision -- residual error  (f - Au)
+		indicates how well disrete system is actually being solved
+
+
+Repo -- besides Github and BitBucket, there's Math Dept Servers
+
+
+**************
+Multi-Thread RelaxOp2D
+	can do sweep of tri-diagonal solves in parallel (each row sent to different thread, then each column solve sent to different thread)
+
+Example
+	Need to use 
+#pragma omp parallel for private(i,j) firstprivate(uXvalues, d2uXvalues, d2Xoperator) schedul(static) default(shared)
+	first private makes instances of high level objects with proper instantiation, instead it would be null constructor
+
+******************
+
+Version Control Systems
+	more than just dropbox, have the ability to revert back to old versions, history is saved
+	But, there were problems, monolithic -- keep everything 
+
+Distributed Version Control Systems ( Mercurial, Git)
+
+	in the repo, .git contains the history. When use "git", it's interacting with the .git file
+
+
+	
