@@ -102,7 +102,7 @@ void evaluatePoissonResidual(double alphaX, double alphaY, GridFun2D& u, GridFun
 int main()
 {
     // Boolean variable to test to check that numbers are similar from omp version to the non-omp
-    bool check = 1;
+    bool check = 0;
     
     
     
