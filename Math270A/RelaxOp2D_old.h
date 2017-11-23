@@ -1,5 +1,5 @@
 //
-//  RelaxOp2D.h
+//  RelaxOp2D.h (OLD VERSION)
 //  Assignment4
 //
 //  Created by Kevin Miller on 10/30/17.
@@ -17,16 +17,30 @@ using namespace std; // Using the "standard" (std) standard template library com
 #include "TriSolver.h"
 #include "GNUplotUtility.h"
 
-#ifdef _OPENMP
-#include<omp.h>
-#endif
 
-#ifndef _RelaxOp2D_
-#define _RelaxOp2D_
+void print_diags(vector<double> loDiag, vector<double> diag, vector<double> upDiag){
+    long n = diag.size();
+    cout << loDiag.size() << " " << n << " " << upDiag.size() << endl;
+    for(long i =0; i < n-1; i++){
+        if(i == 0){
+            cout << "\t\t" << setw(5) << diag[i] << "\t" << setw(5) << upDiag[i] << endl;
+        }
+        else{
+            cout << setw(5) << loDiag[i-1] << "\t" << setw(5) << diag[i] << "\t" << setw(5) << upDiag[i] << endl;
+        }
+    }
+    cout << setw(5) << loDiag[n-2] << "\t" << setw(5) << diag[n-1] << endl;
+    
+}
 
 
 
-class RelaxOp2D {
+#ifndef _RelaxOp2D_old_
+#define _RelaxOp2D_old_
+
+
+
+class RelaxOp2Do {
     
 public:
     TriSolver triSolverX;
@@ -103,8 +117,8 @@ public:
         this->triSolverY = triSolverY;
     };
     
-#ifdef _OPENMP
-    // apply function for RelaxOp2D, with OPENMP enabled
+    
+    // apply function for RelaxOp2D
     void apply(const GridFun2D& uIn, GridFun2D& uOut){
         long Mx = uIn.xPanel + 1;
         long My = uIn.yPanel + 1;
@@ -113,97 +127,9 @@ public:
         
         GridFun2D ustar; // make copy of uIn, use as intermediate step
         ustar = uIn; // copy initializer to get same sizes and place to start
+        // GNUplotUtility::output(ustar, "firstuSTAR11.dat");
        
 	// Forward step
-        double Xval = 0.5*alphaX*dt/(uIn.hx*uIn.hx); // Note the constant in front of D_D+ X is
-        double Yval = alphaY*dt/(uIn.hy*uIn.hy); // different than D_D+ Y....
-        for(long i=1; i < Mx - 1; i++){
-            long j;
-#pragma omp parallel for default(shared) private(j) schedule(static)
-            for(j = 1; j < My - 1; j++){
-                ustar.values(i,j) += Xval*(uIn.values(i-1,j) - 2.0*uIn.values(i,j) + uIn.values(i+1,j)); // D_D+ X operator
-                ustar.values(i,j) += Yval*(uIn.values(i,j-1) - 2.0*uIn.values(i,j) + uIn.values(i,j+1)); // D_D+ Y operator
-            }
-        }
-        
-        ustar += F;
-        
-        
-        
-        GridFun2D ustar2;
-        ustar2 = uIn;
-        
-        // solve (I - 0.5*dt*alphaX*D_D+ X)ustar2 = ustar for each row (for each j)
-        vector<double> ustar_j;
-        vector<double> ustar2_j;
-        
-        ustar_j.resize(Mx);
-        ustar2_j.resize(Mx);
-        
-        
-        TriSolver TSX = triSolverX;
-        long j;
-#pragma omp parallel for default(shared) private(j) firstprivate(TSX, ustar_j, ustar2_j) schedule(static)
-        for (j = 1; j < My-1; j++){
-            for (long i=0; i < Mx; i++){
-                ustar_j[i] =  ustar.values(i,j);
-            }
-            
-            TSX.apply(Mx, ustar_j, ustar2_j);
-            
-            for (long i=0; i < Mx; i++){
-                ustar2.values(i,j) = ustar2_j[i];
-            }
-        }
-        
-        
-        for(long i = 1; i < Mx-1; i++){
-            long j;
-#pragma omp parallel for default(shared) private(j) schedule(static)
-            for(j = 1; j < My-1; j++){
-                ustar2.values(i,j) -= 0.5*Yval*(uIn.values(i,j-1) - 2.0*uIn.values(i,j) + uIn.values(i, j+1));
-            }
-        }
-        
-        // Solve (I - 0.5*dt*alphaY*D_D+ Y uOut = ustar2
-        vector<double> ustar2_i;
-        vector<double> uOut_i;
-        ustar2_i.resize(My);
-        uOut_i.resize(My);
-        
-        TriSolver TSY = triSolverY;
-        long i;
-#pragma omp parallel for default(shared) private(i) firstprivate(TSY, ustar2_i, uOut_i) schedule(static)
-        for (i = 1; i < Mx-1; i++){
-            for (long j=0; j < My; j++){
-                ustar2_i[j] =  ustar2.values(i,j);
-            }
-            
-            TSY.apply(My, ustar2_i, uOut_i);
-            
-            for (long j=0; j < My; j++){
-                uOut.values(i,j) = uOut_i[j];
-            }
-        }
-        
-        
-        return;
-    };
-    
-    
-#else
-    // apply function for RelaxOp2D WITHOUT OPENMP
-    void apply(const GridFun2D& uIn, GridFun2D& uOut){
-        long Mx = uIn.xPanel + 1;
-        long My = uIn.yPanel + 1;
-        uOut = uIn; // uOut gets the right boundary values set right away
-        
-        
-        GridFun2D ustar; // make copy of uIn, use as intermediate step
-        ustar = uIn; // copy initializer to get same sizes and place to start
-        
-        
-        // Forward step
         double Xval = 0.5*alphaX*dt/(uIn.hx*uIn.hx); // Note the constant in front of D_D+ X is
         double Yval = alphaY*dt/(uIn.hy*uIn.hy); // different than D_D+ Y....
         for(long i=1; i < Mx - 1; i++){
@@ -213,14 +139,18 @@ public:
             }
         }
         
-        
+        //GNUplotUtility::output(ustar, "firstuSTAR.dat");
         ustar += F;
+        
+        //GNUplotUtility::output(ustar,"uStar.dat");
         
         
         GridFun2D ustar2;
         ustar2 = uIn;
         
         // solve (I - 0.5*dt*alphaX*D_D+ X)ustar2 = ustar for each row (for each j)
+        //Math270A::DoubleArray2D ustar_vector = ustar.values;
+        //Math270A::DoubleArray2D ustar2_vector = ustar2.values;
         vector<double> ustar_j;
         vector<double> ustar2_j;
         
@@ -238,7 +168,7 @@ public:
                 ustar2.values(i,j) = ustar2_j[i];
             }
         }
-        
+        //GNUplotUtility::output(ustar2,"uStar2.dat");
         
         
         for(long i = 1; i < Mx-1; i++){
@@ -247,7 +177,7 @@ public:
             }
         }
         
-        
+        //GNUplotUtility::output(ustar2, "uStar2final.dat");
         // Solve (I - 0.5*dt*alphaY*D_D+ Y uOut = ustar2
         vector<double> ustar2_i;
         vector<double> uOut_i;
@@ -265,10 +195,11 @@ public:
             }
         }
         
+        //GNUplotUtility::output(uOut, "uOUT.dat");
         
         return;
     };
-#endif /* _OPENMP */
+    
     
 };
 
