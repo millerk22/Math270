@@ -171,15 +171,15 @@ public:
         ustar2_i.resize(My);
         uOut_i.resize(My);
         
+        TriSolver TSY = triSolverY;
         long i;
-        
-#pragma omp parallel for default(shared) private(i) firstprivate(triSolverY, ustar2_i, uOut_i) schedule(static)
+#pragma omp parallel for default(shared) private(i) firstprivate(TSY, ustar2_i, uOut_i) schedule(static)
         for (i = 1; i < Mx-1; i++){
             for (long j=0; j < My; j++){
                 ustar2_i[j] =  ustar2.values(i,j);
             }
             
-            triSolverY.apply(My, ustar2_i, uOut_i);
+            TSY.apply(My, ustar2_i, uOut_i);
             
             for (long j=0; j < My; j++){
                 uOut.values(i,j) = uOut_i[j];
