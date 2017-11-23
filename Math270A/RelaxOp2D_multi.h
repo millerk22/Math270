@@ -21,12 +21,12 @@ using namespace std; // Using the "standard" (std) standard template library com
 #include<omp.h>
 #endif
 
-#ifndef _RelaxOp2Dm_
-#define _RelaxOp2Dm_
+#ifndef _RelaxOp2D_
+#define _RelaxOp2D_
 
 
 
-class RelaxOp2Dm {
+class RelaxOp2D {
     
 public:
     TriSolver triSolverX;
@@ -274,4 +274,4 @@ public:
 
 
 
-#endif /* RelaxOp2Dm_ */
+#endif /* RelaxOp2D_ */

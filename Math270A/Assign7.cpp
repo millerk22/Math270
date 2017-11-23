@@ -18,7 +18,7 @@ using namespace std;
 
 #include "GridFun2D.h"    // 2D grid function class
 #include "RelaxOp2D_multi.h"    // 2D Douglas relaxation operator class
-#include "RelaxOp2D.h"
+#include "RelaxOp2D_old.h"
 #include "GNUplotUtility.h"
 #include "ClockIt.h"
 
@@ -102,7 +102,7 @@ void evaluatePoissonResidual(double alphaX, double alphaY, GridFun2D& u, GridFun
 int main()
 {
     // Boolean variable to test to check that numbers are similar from omp version to the non-omp
-    bool check = 1;
+    bool check = 0;
     
     
     
@@ -279,7 +279,7 @@ int main()
     }
     int levels = int(log2(M)+ 1); // levels is the number of different dtj's we will do in a sweep
     vector<float> dTJ;
-    vector<RelaxOp2Dm> RO2D_levels; // make RelaxOp2Dm 's
+    vector<RelaxOp2D> RO2D_levels; // make RelaxOp2Dm 's
     dTJ.resize(levels);
     RO2D_levels.resize(levels);
     for (int i=0; i < levels; i++){
@@ -497,7 +497,7 @@ int main()
         }
         int levels = int(log2(M)+ 1); // levels is the number of different dtj's we will do in a sweep
         vector<float> dTJ;
-        vector<RelaxOp2D> RO2D_levels;
+        vector<RelaxOp2Do> RO2D_levels;
         dTJ.resize(levels);
         RO2D_levels.resize(levels);
         for (int i=0; i < levels; i++){

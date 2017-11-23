@@ -1,5 +1,5 @@
 //
-//  RelaxOp2D.h
+//  RelaxOp2D.h (OLD VERSION)
 //  Assignment4
 //
 //  Created by Kevin Miller on 10/30/17.
@@ -35,12 +35,12 @@ void print_diags(vector<double> loDiag, vector<double> diag, vector<double> upDi
 
 
 
-#ifndef _RelaxOp2D_
-#define _RelaxOp2D_
+#ifndef _RelaxOp2D_old_
+#define _RelaxOp2D_old_
 
 
 
-class RelaxOp2D {
+class RelaxOp2Do {
     
 public:
     TriSolver triSolverX;
