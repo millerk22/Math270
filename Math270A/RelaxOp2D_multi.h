@@ -140,14 +140,16 @@ public:
         ustar_j.resize(Mx);
         ustar2_j.resize(Mx);
         
+        
+        TriSolver TSX = triSolverX;
         long j;
-#pragma omp parallel for default(shared) private(j) firstprivate(triSolverX, ustar_j, ustar2_j) schedule(static)
+#pragma omp parallel for default(shared) private(j) firstprivate(TSX, ustar_j, ustar2_j) schedule(static)
         for (j = 1; j < My-1; j++){
             for (long i=0; i < Mx; i++){
                 ustar_j[i] =  ustar.values(i,j);
             }
             
-            triSolverX.apply(Mx, ustar_j, ustar2_j);
+            TSX.apply(Mx, ustar_j, ustar2_j);
             
             for (long i=0; i < Mx; i++){
                 ustar2.values(i,j) = ustar2_j[i];
