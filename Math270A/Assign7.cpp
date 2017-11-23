@@ -17,7 +17,7 @@ using namespace std;
 //
 
 #include "GridFun2D.h"    // 2D grid function class
-#include "RelaxOp2D_multi.h"    // 2D Douglas relaxation operator class
+#include "RelaxOp2D.h"    // 2D Douglas relaxation operator class
 #include "RelaxOp2D_old.h"
 #include "GNUplotUtility.h"
 #include "ClockIt.h"
