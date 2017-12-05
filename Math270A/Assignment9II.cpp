@@ -139,7 +139,7 @@ double evaluateResidualNorm(const GridFun2D& a, const GridFun2D& u, const GridFu
 int main()
 {
     // Toggle between fixed and variable timestepping
-    bool fixedTimeStep = false;
+    bool fixedTimeStep = true;
     // Set up test problem
     
     double waveNumberX =  1.0;  // test problem x-coordinate wave number
