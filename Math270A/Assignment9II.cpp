@@ -139,7 +139,7 @@ double evaluateResidualNorm(const GridFun2D& a, const GridFun2D& u, const GridFu
 int main()
 {
     // Toggle between fixed and variable timestepping
-    bool fixedTimeStep = true;
+    bool fixedTimeStep = false;
     // Set up test problem
     
     double waveNumberX =  1.0;  // test problem x-coordinate wave number
@@ -263,7 +263,7 @@ int main()
     // Relaxation loop
     //
     
-    long   iterMax   = 1000;
+    long   iterMax   = 10000;
     long   iter      = 0;
     double residNorm = 2.0*tol;
     
