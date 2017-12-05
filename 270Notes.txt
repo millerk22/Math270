@@ -175,4 +175,8 @@ Distributed Version Control Systems ( Mercurial, Git)
 	in the repo, .git contains the history. When use "git", it's interacting with the .git file
 
 
-	
+
+Golub and Van Loan "Matrix Computations" -- for 270 B
+"Numerical Recipes" book to read more on FFT uses and other things.
+
+ATLAS BLAS -- automatically tuned linear algebra subroutine. It interrogates your hardware and then fine tunes BLAS routines to be best for your hardware.	
