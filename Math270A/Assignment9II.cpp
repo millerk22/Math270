@@ -128,16 +128,18 @@ double evaluateResidualNorm(const GridFun2D& a, const GridFun2D& u, const GridFu
 int main()
 {
     // Toggle between fixed and variable timestepping
-    
     bool fixedTimeStep = true;
-    
     // Set up test problem
     
     double waveNumberX =  1.0;  // test problem x-coordinate wave number
     double waveNumberY =  1.0;  // test problem x-coordinate wave number
     
-    long   xPanel      =   10;  // X panel count
-    long   yPanel      =   10;  // X panel count
+    long N;
+    cout << "NumPanels:" << endl;
+    cin >> N;
+    long   xPanel      =   N;  // X panel count
+    long   yPanel      =   N;  // X panel count
+    
     double dt          =   0.025;  // Relaxation timestep
     
     double tol        =  1.0e-6;  // Stopping tolerance
