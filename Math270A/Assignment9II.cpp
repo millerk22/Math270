@@ -285,7 +285,7 @@ int main()
             residNorm = evaluateResidualNorm(aCoeff, uk, f);
             
             iter++;
-            if(iter%10 == 0) cout << "Iteration : " << iter << endl;
+            //if(iter%10 == 0) cout << "Iteration : " << iter << endl;
         }
     }
     //###################################################
