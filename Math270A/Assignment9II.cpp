@@ -20,7 +20,7 @@ using namespace std;
 #include "GridFun2D.h"       // 2D grid function class
 #include "VarRelaxOp2D.h"    // 2D Crank-Nicholson relaxation operator
 #include "GNUplotUtility.h"
-
+#include "ClockIt.h"
 //
 // This test problem for
 //
@@ -37,6 +37,17 @@ using namespace std;
 // by inserting this solution into the equation and analytically differentiating.
 //
 //
+/*ClockIt clock1;              // declare ClockIt instance
+
+clock1.start();              // start the instance (reads the clock)
+
+// === Code to be timed === //  // carry out computation
+
+clock1.stop();               // stop the clock (reads the clock again)
+
+cout << "Time elapsed in Milli-seconds: " << clock1.getMilliSecElapsedTime() << endl;
+*/
+
 class VarCoefficientTestProblem2D
 {
 public:
@@ -161,6 +172,7 @@ int main()
     cout << "Timestep      : " << dt << endl;
     
     
+    
     // Instantiate the test problem solution
     
     VarCoefficientTestProblem2D testSoln(xMin, xMax, waveNumberX, yMin, yMax, waveNumberY);
@@ -186,6 +198,9 @@ int main()
             uExact.values(i,j) = testSoln(x,y);
             f.values(i,j)      = testSoln.evaluateRHS(x,y);
         }}
+    
+    ClockIt clock1;              // declare ClockIt instance    
+    clock1.start();              // start the instance (reads the clock)
     
     GridFun2D uk(xPanel,xMin,xMax,yPanel,yMin,yMax);
     GridFun2D ukp1(xPanel,xMin,xMax,yPanel,yMin,yMax);
@@ -234,12 +249,12 @@ int main()
     
     
     // Output right hand side, initial data and exact solution
-    
+    /*
     GNUplotUtility::output(f,"f.dat");
     GNUplotUtility::output(aCoeff,"a.dat");
     GNUplotUtility::output(uk,"u0.dat");
     GNUplotUtility::output(uExact,"uExact.dat");
-    
+    */
     
     VarRelaxOp2D varRelaxOp;
     varRelaxOp.initialize(dt, aCoeff, f);
@@ -346,6 +361,8 @@ int main()
         printf("Relaxation Count : %ld  \n",iter);
     }
     
+    clock1.stop();               // stop the clock (reads the clock again)
+    cout << "Time elapsed in Milli-seconds: " << clock1.getMilliSecElapsedTime() << endl << endl;
     //
     // Evaluate the error with respect to the continuous solution
     //
